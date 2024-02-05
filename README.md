@@ -17,4 +17,4 @@ Just execute `./setup` and it will create links to the script and configuration 
 ## Configuration
 
 Each attribute name in the tags.config file represents the tag to which another tag should be added. In the json file, the value following the attribute name is the tag that is going to be added to the task. 
-
+Using key "@Def" adds a default tag to all created tasks

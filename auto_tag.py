@@ -7,8 +7,14 @@ if False:
 import json
 import sys
 from pathlib import Path
+from taskw import TaskWarrior
 import os
 
+try:
+    w = TaskWarrior()
+    config = w.load_config()
+except Exception:
+    print("Configuration not found", file=sys.stderr)
 
 PATH_TASK_CONTINUOUS_TAGS='.task/task_continuous_tags'
 
@@ -19,16 +25,19 @@ try:
 except Exception:
     pass
 
-
 new = OLD.copy()
 
-with open(str(Path.home()) + '/.task/hooks/tags.config', 'r') as tag_config_file:
+with open(os.path.expanduser(config["data"]["location"])+"/hooks/tags.config", 'r') as tag_config_file:
     TAG_CONFIG = json.load(tag_config_file)
 
 
+# if "@Def" add default tag to task
 if 'tags' not in list(OLD):
-    print(json.dumps(new))
-    exit()
+    if "@Def" in TAG_CONFIG.keys():
+        new['tags'] = TAG_CONFIG["@Def"]
+    else:
+        print(json.dumps(new))
+        exit()
 
 num_tags_old = 0
 while True:
